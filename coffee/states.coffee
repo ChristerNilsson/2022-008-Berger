@@ -33,9 +33,7 @@ export setRond = (delta) ->
 	globals.rond += delta
 	common.R0.visible = globals.rond > 0
 	common.R2.visible = globals.rond < globals.N-2
-	common.R0.text = globals.rond-1
-	common.R1.text = globals.rond
-	common.R2.text = globals.rond+1
+	common.R1.text = globals.rond + 1
 
 export setN = (delta) ->
 	globals.N += delta
@@ -43,9 +41,7 @@ export setN = (delta) ->
 	setRond 0
 	common.X0.visible = globals.N > 4
 	common.X2.visible = globals.N < 28
-	common.X0.text = globals.N - 2
 	common.X1.text = globals.N
-	common.X2.text = globals.N + 2
 
 	N = globals.N
 	globals.ronder = []
@@ -63,19 +59,19 @@ common = {}
 common.A  = new CRounded  7, 96.5, 12, 6, 'Halvbord', => setState 'SA'
 common.B  = new CRounded 20, 96.5, 12, 6, "Cirkel", => setState 'SB'
 common.C  = new CRounded 33, 96.5, 12, 6, "Rotation", => setState 'SC'
-common.D  = new CRounded 59, 96.5, 12, 6, "Berger\nSpelare", => setState 'SD'
-common.E  = new CRounded 46, 96.5, 12, 6, 'Berger\nHalvbord', => setState 'SE'
+common.D  = new CRounded 46, 96.5, 12, 6, "Berger\nSpelare", => setState 'SD'
+common.E  = new CRounded 59, 96.5, 12, 6, 'Berger\nHalvbord', => setState 'SE'
 
 common.XSpelare = new CDead 74, 93.5,'Spelare:'
-common.X0 = new CRounded  69, 97, 5, 5, 0, => setN -2
-common.X1 = new CRounded  74, 97, 5, 5, 1
-common.X2 = new CRounded  79, 97, 5, 5, 2, => setN +2
+common.X0 = new CRounded  69, 97, 5, 5, '-2', => setN -2
+common.X1 = new CRounded  74, 97, 5, 5, 4
+common.X2 = new CRounded  79, 97, 5, 5, '+2', => setN +2
 common.X1.disabled = true
 
 common.XRond = new CDead  91, 93.5,'Rond:'
-common.R0 = new CRounded 86, 97, 5, 5, 0, => setRond -1
-common.R1 = new CRounded 91, 97, 5, 5, 1
-common.R2 = new CRounded 96, 97, 5, 5, 2, => setRond +1
+common.R0 = new CRounded 86, 97, 5, 5, '-1', => setRond -1
+common.R1 = new CRounded 91, 97, 5, 5, 0
+common.R2 = new CRounded 96, 97, 5, 5, '+1', => setRond +1
 common.R1.disabled = true
 
 export class State
@@ -123,7 +119,7 @@ export class SA extends State # Halvbord
 			fill 'gray'
 			rect @x[iPlace],@y[iPlace],@dx,@dx
 			fill ['white','black'][iPlace%2]
-			text iPlace,@x[iPlace],@y[iPlace]+0.5
+			text 1+iPlace,@x[iPlace],@y[iPlace]+0.5
 
 			y = if iPlace >= @N/2 then 0.9*@dy else -0.75*@dy
 			fill if players[iPlace] == 0 then 'red' else 'black'
@@ -227,7 +223,7 @@ export class SD extends State # Berger Halvbord
 		textSize 0.5*@dy
 		for i in range @N
 			fill 'black'
-			text i,          0.25*@dx, @yoff+@dy/2+@dy*i
+			text i+1,          0.25*@dx, @yoff+@dy/2+@dy*i
 			fill if i==0 then 'red' else 'black'
 			text ALPHABET[i],0.75*@dx, @yoff+@dy/2+@dy*i
 
@@ -236,7 +232,7 @@ export class SD extends State # Berger Halvbord
 
 			if rond == globals.rond then markeraRond rond,@xoff,@dx,@yoff,@dy,@N
 			fill 'black'
-			text rond,@dx*1.5+@dx*@rond,@yoff/2
+			text rond+1,@dx*1.5+@dx*rond,@yoff/2
 
 			push()
 			textSize 0.5*@dy
@@ -246,7 +242,7 @@ export class SD extends State # Berger Halvbord
 				textAlign [RIGHT,LEFT][iPlace % 2]
 				x = @xoff + @dx/2+@dx*rond + [0.45*@dx,-0.45*@dx][iPlace % 2]
 				y = @yoff + 0.3*@dy+@dy*iPlayer
-				text players[@N-iPlace-1],x,y
+				text 1+players[@N-iPlace-1],x,y
 
 			pop()
 
@@ -275,11 +271,12 @@ export class SE extends State # Berger Spelare
 		for rond in range @N-1
 			players = invert globals.ronder[rond]
 			fill 'black'
-			text rond,@dx*1.5+@dx*rond,@yoff/2
+			text rond+1,@dx*1.5+@dx*rond,@yoff/2
+
 			if rond == globals.rond then markeraRond rond,@xoff,@dx,@yoff,@dy,@N
 			for iPlace in range @N
 				iPlayer = players[iPlace]
 				fill ['white','black'][iPlayer % 2]
-				text iPlayer,@xoff+@dx/2+@dx*rond, @yoff+@dy/2+@dy*iPlace
+				text iPlayer+1,@xoff+@dx/2+@dx*rond, @yoff+@dy/2+@dy*iPlace
 		grid @xoff,@dx, @N-1, @yoff, @dy, @N
 
