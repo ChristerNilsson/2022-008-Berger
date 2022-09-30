@@ -39,4 +39,3 @@ export class SC extends State # Rotation
 			circle x,y,r
 			fill ['white','black'][players[i] % 2]
 			text ALPHABET[i],x,y+0.25
-

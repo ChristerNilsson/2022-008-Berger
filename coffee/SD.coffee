@@ -41,4 +41,3 @@ export class SD extends State # Berger Halvbord
 			pop()
 
 		grid @xoff,@dx, @N-1, @yoff, @dy, @N
-
