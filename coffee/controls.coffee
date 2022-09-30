@@ -4,7 +4,7 @@ export class Control
 	constructor : (@x,@y,@w,@h,@text='',@bg='black',@fg='white') ->
 		@visible = true
 		@disabled = false
-		@textSize = 2.5
+		@textSize = 2
 	draw : -> console.log 'Control.draw must be overriden!'
 	inside : (x,y) ->
 		w = @w * [height/width,width/height][1-globals.TOGGLE]
@@ -15,7 +15,7 @@ export class CDead extends Control
 		super x,y,0,0,text,'black',fg
 	draw : ->
 		push()
-		textSize 2.5
+		textSize 2
 		fill 'black'
 		text @text,@x,@y
 		pop()

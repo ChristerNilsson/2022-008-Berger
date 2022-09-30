@@ -1,16 +1,28 @@
 export globals = {}
 
+export invert = (arr) ->
+	res = []
+	for i in range arr.length
+		item = arr[i]
+		res[item] = i
+	res
+
+# rotera allt utom sista elementet
+export rotera = (arr,step) ->
+	last = arr.pop()
+	N = arr.length
+	arr = arr.slice(step).concat arr.slice(0,step)
+	arr.push last
+	arr
+assert [6,0,1,2,3,4,5,7], rotera [0,1,2,3,4,5,6,7],-1
+assert [0,1,2,3,4,5,6,7], rotera [0,1,2,3,4,5,6,7],0
+assert [1,2,3,4,5,6,0,7], rotera [0,1,2,3,4,5,6,7],1
+assert [2,3,4,5,6,0,1,7], rotera [0,1,2,3,4,5,6,7],2
+
 globals.states = {}
 globals.currState = null
 globals.TOGGLE = 0
-globals.N = 20 # number of players. Even number!
+globals.N = 10 # 4..28 number of players. Even number!
 globals.rond = 0 # nollbaserad
 globals.ronder = [] # för varje rond, gå in med halvbord och få ut spelaren
 
-N = globals.N
-for rond in range N-1
-	players = range N-1
-	players = players.slice(N-1-rond).concat players.slice(0,N-1-rond)
-	players.push N-1
-	if rond%2==1 then [players[0],players[N-1]] = [players[N-1],players[0]]
-	globals.ronder.push players

@@ -1,5 +1,5 @@
 import {globals} from './globals.js'
-import {setState,setRond, SA,SB,SC,SD} from './states.js'
+import {setState, setN, setRond, SA,SB,SC,SD,SE} from './states.js'
 
 createState = (key,klass) -> globals.states[key] = new klass key
 
@@ -17,8 +17,10 @@ window.setup = ->
 	createState 'SB', SB
 	createState 'SC', SC
 	createState 'SD', SD
+	createState 'SE', SE
 
-	setState 'SA'
+	setState 'SD'
+	setN 0
 	setRond 0
 
 window.mousePressed = -> globals.currState.mouseClicked()
