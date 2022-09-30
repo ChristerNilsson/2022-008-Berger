@@ -27,7 +27,7 @@ export class CRounded extends Control
 		if @visible
 			push()
 			fill if @disabled then "gray" else 'black'
-			rect @x,@y,@w,@h,@h/2
+			rect @x,@y,@w,@h,@h/10
 			textSize @textSize
 			fill if @disabled then "black" else 'white'
 			text @text,@x,@y

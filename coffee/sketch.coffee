@@ -1,5 +1,10 @@
 import {globals} from './globals.js'
-import {setState, setN, setRond, SA,SB,SC,SD,SE} from './states.js'
+import {setState, setN, setRond} from './states.js'
+import {SA} from './SA.js'
+import {SB} from './SB.js'
+import {SC} from './SC.js'
+import {SD} from './SD.js'
+import {SE} from './SE.js'
 
 createState = (key,klass) -> globals.states[key] = new klass key
 
@@ -19,7 +24,7 @@ window.setup = ->
 	createState 'SD', SD
 	createState 'SE', SE
 
-	setState 'SD'
+	setState 'SA'
 	setN 0
 	setRond 0
 

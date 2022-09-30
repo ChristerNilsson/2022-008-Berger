@@ -10,7 +10,6 @@ export invert = (arr) ->
 # rotera allt utom sista elementet
 export rotera = (arr,step) ->
 	last = arr.pop()
-	N = arr.length
 	arr = arr.slice(step).concat arr.slice(0,step)
 	arr.push last
 	arr
