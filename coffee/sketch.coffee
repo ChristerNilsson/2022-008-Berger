@@ -28,7 +28,7 @@ window.setup = ->
 	setN 0
 	setRond 0
 
-window.mousePressed = -> globals.currState.mouseClicked()
+window.mouseClicked = -> globals.currState.mouseClicked()
 
 window.draw = ->
 	scale width/100,height/100 # portrait
