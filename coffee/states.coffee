@@ -33,7 +33,7 @@ export setRond = (delta) ->
 	globals.rond += delta
 	common.R0.visible = globals.rond > 0
 	common.R2.visible = globals.rond < globals.N-2
-	common.R1.text = globals.rond + 1
+	common.R1.text = "Rond:\n#{globals.rond + 1}"
 
 export setN = (delta) ->
 	globals.N += delta
@@ -41,7 +41,7 @@ export setN = (delta) ->
 	setRond 0
 	common.X0.visible = globals.N > 4
 	common.X2.visible = globals.N < ALPHABET.length
-	common.X1.text = globals.N
+	common.X1.text = "Spelare:\n#{globals.N}"
 
 	N = globals.N
 	globals.ronder = []
@@ -56,22 +56,22 @@ export setN = (delta) ->
 		state.setN()
 
 common = {}
-common.A  = new CRounded  7, 96.5, 12, 6, 'Halvbord', => setState 'SA'
-common.B  = new CRounded 20, 96.5, 12, 6, "Cirkel", => setState 'SB'
-common.C  = new CRounded 33, 96.5, 12, 6, "Rotation", => setState 'SC'
-common.D  = new CRounded 46, 96.5, 12, 6, "Berger\nSpelare", => setState 'SD'
-common.E  = new CRounded 59, 96.5, 12, 6, 'Berger\nHalvbord', => setState 'SE'
+common.A  = new CRounded 10, 3, 19, 5, 'Halvbord', => setState 'SA'
+common.B  = new CRounded 30, 3, 19, 5, "Cirkel", => setState 'SB'
+common.C  = new CRounded 50, 3, 19, 5, "Rotation", => setState 'SC'
+common.D  = new CRounded 70, 3, 19, 5, "Berger\nSpelare", => setState 'SD'
+common.E  = new CRounded 90, 3, 19, 5, 'Berger\nHalvbord', => setState 'SE'
 
-common.XSpelare = new CDead 74, 93.5,'Spelare:'
-common.X0 = new CRounded  69, 97, 5, 5, '-2', => setN -2
-common.X1 = new CRounded  74, 97, 5, 5, 4
-common.X2 = new CRounded  79, 97, 5, 5, '+2', => setN +2
+#common.XSpelare = new CDead 25, 93.5,'Spelare:'
+common.X0 = new CRounded  9-0.5, 97, 15, 5, '-2', => setN -2
+common.X1 = new CRounded 25-0.5, 97, 15, 5, 4
+common.X2 = new CRounded 41-0.5, 97, 15, 5, '+2', => setN +2
 common.X1.disabled = true
 
-common.XRond = new CDead  91, 93.5,'Rond:'
-common.R0 = new CRounded 86, 97, 5, 5, '-1', => setRond -1
-common.R1 = new CRounded 91, 97, 5, 5, 0
-common.R2 = new CRounded 96, 97, 5, 5, '+1', => setRond +1
+#common.XRond = new CDead 75, 93.5,'Rond:'
+common.R0 = new CRounded 59+0.5, 97, 15, 5, '-1', => setRond -1
+common.R1 = new CRounded 75+0.5, 97, 15, 5, 0
+common.R2 = new CRounded 91+0.5, 97, 15, 5, '+1', => setRond +1
 common.R1.disabled = true
 
 export class State

@@ -7,10 +7,10 @@ export class SD extends State # Berger Halvbord
 		@N = globals.N
 		@dx = 99/@N
 		if @dx > 10 then @dx=10
-		@dy = 92/(@N+1)
+		@dy = (100-12)/(@N+1)
 		if @dy > 10 then @dy=10
 		@xoff = @dx
-		@yoff = @dy
+		@yoff = 6+@dy
 
 	draw : ->
 		super()
@@ -26,7 +26,7 @@ export class SD extends State # Berger Halvbord
 
 			if rond == globals.rond then markeraRond rond,@xoff,@dx,@yoff,@dy,@N
 			fill 'black'
-			text rond+1,@dx*1.5+@dx*rond,@yoff/2
+			text rond+1,@dx*1.5+@dx*rond,@yoff*0.85
 
 			push()
 			textSize 0.5*@dy

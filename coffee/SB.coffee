@@ -4,15 +4,15 @@ import {ALPHABET, setN, State} from './states.js'
 export class SB extends State # Cirkel
 
 	setN : ->
-		R = 40
+		R = 35
 		@points = []
 		@N = globals.N
 		angle = 360/(@N-1)
 		for i in range @N-1
 			x = 50+R*cos angle*i
-			y = 47.5+R*sin angle*i
+			y = 50+R*sin angle*i
 			@points.push [x,y]
-		@points.push [50,47.5]
+		@points.push [50,50]
 
 	makeLine : (i,j) ->
 		[x0,y0] = @points[i]
