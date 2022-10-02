@@ -1,43 +1,41 @@
-import {globals} from './globals.js'
-import {ALPHABET, State, grid, markeraRond} from './states.js'
+import {globals,rotera,invert} from './globals.js'
+import {ALPHABET, setN, State} from './states.js'
 
-export class SD extends State # Berger Halvbord
-
+export class SD extends State # Rotation
+	
 	setN : ->
+		R = 35
+		@points = []
 		@N = globals.N
-		@dx = 99/@N
-		if @dx > 10 then @dx=10
-		@dy = (100-12)/(@N+1)
-		if @dy > 10 then @dy=10
-		@xoff = @dx
-		@yoff = 6+@dy
+		angle = 360/(@N-1)
+		for i in range @N-1
+			x = 50+R*cos angle*i
+			y = 50+R*sin angle*i
+			@points.push [x,y]
+		@points.push [50,50]
+
+	makeLine : (i,j) ->
+		z = rotera range(@N),-globals.rond
+		[x0,y0] = @points[z[i]]
+		[x1,y1] = @points[z[j]]
+		line x0,y0,x1,y1
 
 	draw : ->
-		super()
-		textSize 0.5*@dy
+		#super()
+		r = 2*100/@N
+		if r>12 then r=12
+		textSize 0.75*r
+		rond = globals.rond
+
+		players = invert globals.ronder[rond]
+
+		m = @N/2
+		@makeLine m-i,m+i-1 for i in range m+1
+			
 		for i in range @N
-			fill 'black'
-			text i+1,          0.25*@dx, @yoff+@dy/2+@dy*i
-			fill if i==0 then 'red' else 'black'
-			text ALPHABET[i],0.75*@dx, @yoff+@dy/2+@dy*i
+			[x,y] = @points[i]
+			fill if i == 0 then 'red' else 'gray'
 
-		for rond in range @N-1
-			players = globals.ronder[rond]
-
-			if rond == globals.rond then markeraRond rond,@xoff,@dx,@yoff,@dy,@N
-			fill 'black'
-			text rond+1,@dx*1.5+@dx*rond,@yoff*0.85
-
-			push()
-			textSize 0.5*@dy
-			for iPlace in range @N
-				fill ['white','black'][iPlace%2]
-				iPlayer = players[iPlace]
-				textAlign [RIGHT,LEFT][iPlace % 2]
-				x = @xoff + @dx/2+@dx*rond + [0.45*@dx,-0.45*@dx][iPlace % 2]
-				y = @yoff + 0.3*@dy+@dy*iPlayer
-				text 1+players[@N-iPlace-1],x,y
-
-			pop()
-
-		grid @xoff,@dx, @N-1, @yoff, @dy, @N
+			circle x,y,r
+			fill ['white','black'][players[i] % 2]
+			text ALPHABET[i],x,y+0.25

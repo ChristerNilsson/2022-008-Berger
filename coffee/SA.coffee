@@ -22,7 +22,7 @@ export class SA extends State # Halvbord
 			@y.push 45+@dy/2
 
 	draw : ->
-		super()
+		#@drawControls()
 		players = globals.ronder[globals.rond]
 		textSize 0.7*@dy
 

@@ -1,7 +1,7 @@
-import {globals,invert} from './globals.js'
+import {globals} from './globals.js'
 import {ALPHABET, State, grid, markeraRond} from './states.js'
 
-export class SE extends State # Berger Spelare
+export class SE extends State # Berger Halvbord
 
 	setN : ->
 		@N = globals.N
@@ -12,21 +12,32 @@ export class SE extends State # Berger Spelare
 		@xoff = @dx
 		@yoff = 6+@dy
 
-	draw: ->
-		super()
-
-		textSize @dy/2
+	draw : ->
+		#super()
+		textSize 0.5*@dy
 		for i in range @N
+			fill 'black'
+			text i+1,          0.25*@dx, @yoff+@dy/2+@dy*i
 			fill if i==0 then 'red' else 'black'
-			text ALPHABET[i],@dx/2,@yoff+@dy/2+@dy*i
+			text ALPHABET[i],0.75*@dx, @yoff+@dy/2+@dy*i
+
 		for rond in range @N-1
-			players = invert globals.ronder[rond]
+			players = globals.ronder[rond]
+
+			if rond == globals.rond then markeraRond rond,@xoff,@dx,@yoff,@dy,@N
 			fill 'black'
 			text rond+1,@dx*1.5+@dx*rond,@yoff*0.85
 
-			if rond == globals.rond then markeraRond rond,@xoff,@dx,@yoff,@dy,@N
+			push()
+			textSize 0.5*@dy
 			for iPlace in range @N
+				fill ['white','black'][iPlace%2]
 				iPlayer = players[iPlace]
-				fill ['white','black'][iPlayer % 2]
-				text iPlayer+1,@xoff+@dx/2+@dx*rond, @yoff+@dy/2+@dy*iPlace
+				textAlign [RIGHT,LEFT][iPlace % 2]
+				x = @xoff + @dx/2+@dx*rond + [0.45*@dx,-0.45*@dx][iPlace % 2]
+				y = @yoff + 0.3*@dy+@dy*iPlayer
+				text 1+players[@N-iPlace-1],x,y
+
+			pop()
+
 		grid @xoff,@dx, @N-1, @yoff, @dy, @N

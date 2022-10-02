@@ -1,41 +1,20 @@
 import {globals} from './globals.js'
 import {ALPHABET, setN, State} from './states.js'
+import {SA} from './SA.js'
 
-export class SB extends State # Cirkel
-
-	setN : ->
-		R = 35
-		@points = []
-		@N = globals.N
-		angle = 360/(@N-1)
-		for i in range @N-1
-			x = 50+R*cos angle*i
-			y = 50+R*sin angle*i
-			@points.push [x,y]
-		@points.push [50,50]
-
-	makeLine : (i,j) ->
-		[x0,y0] = @points[i]
-		[x1,y1] = @points[j]
-		line x0,y0,x1,y1
+export class SB extends SA # Bord
 
 	draw : ->
-		super()
-		r = 2*100/@N
-		if r>12 then r=12
-		textSize 0.75*r
-		rond = globals.rond
+		players = globals.ronder[globals.rond]
+		textSize 0.7*@dy
 
-		players = globals.ronder[rond]
+		for iPlace in range @N 
+			if iPlace < @N/2
+				fill 'gray'
+				rect @x[iPlace],@y[iPlace],@dx,@dx
+				fill 'black'
+				text 1+iPlace,@x[iPlace],@y[iPlace]
 
-		m = @N/2
-		@makeLine m-i,m+i-1 for i in range m+1
-			
-		for i in range @N
-			[x,y] = @points[i]
-			fill if players[i] == 0 then 'red' else 'gray'
-			circle x,y,r
-			if i == 0 then fill ['white','black'][i%2]
-			else if i == @N-1 then fill ['white','black'][i%2]
-			else fill ['white','black'][i%2]
-			text ALPHABET[players[i]],x,y+0.25
+			y = if iPlace >= @N/2 then 0 else -@dy
+			fill ['white','black'][iPlace%2] #if players[iPlace] == 0 then 'red' else 'black'
+			text ALPHABET[players[iPlace]],@x[iPlace],@y[iPlace] + y

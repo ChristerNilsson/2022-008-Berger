@@ -1,8 +1,8 @@
-import {globals,rotera,invert} from './globals.js'
+import {globals} from './globals.js'
 import {ALPHABET, setN, State} from './states.js'
 
-export class SC extends State # Rotation
-	
+export class SC extends State # Cirkel
+
 	setN : ->
 		R = 35
 		@points = []
@@ -15,27 +15,27 @@ export class SC extends State # Rotation
 		@points.push [50,50]
 
 	makeLine : (i,j) ->
-		z = rotera range(@N),-globals.rond
-		[x0,y0] = @points[z[i]]
-		[x1,y1] = @points[z[j]]
+		[x0,y0] = @points[i]
+		[x1,y1] = @points[j]
 		line x0,y0,x1,y1
 
 	draw : ->
-		super()
+		#super()
 		r = 2*100/@N
 		if r>12 then r=12
 		textSize 0.75*r
 		rond = globals.rond
 
-		players = invert globals.ronder[rond]
+		players = globals.ronder[rond]
 
 		m = @N/2
 		@makeLine m-i,m+i-1 for i in range m+1
 			
 		for i in range @N
 			[x,y] = @points[i]
-			fill if i == 0 then 'red' else 'gray'
-
+			fill if players[i] == 0 then 'red' else 'gray'
 			circle x,y,r
-			fill ['white','black'][players[i] % 2]
-			text ALPHABET[i],x,y+0.25
+			if i == 0 then fill ['white','black'][i%2]
+			else if i == @N-1 then fill ['white','black'][i%2]
+			else fill ['white','black'][i%2]
+			text ALPHABET[players[i]],x,y+0.25
