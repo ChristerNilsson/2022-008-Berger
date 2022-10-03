@@ -29,11 +29,15 @@ saveData = ->
 		a.click()
 		window.URL.revokeObjectURL url
 
+crlf = "\n"
+round3 = (x) -> Math.round(1000*x)/1000
+
 svgline = (x1,y1,x2,y2) -> "<line x1=\"#{x1}\" y1=\"#{y1}\" x2=\"#{x2}\" y2=\"#{y2}\" stroke=\"black\"/>"
-svgtext = (text,x,y,ta='middle',ts=2) -> "<text font-size=\"#{ts}em\" text-anchor=\"#{ta}\" x=\"#{x}\" y=\"#{y}\">#{text}</text>"
-svggrid = (headers,ws,digits,n,dx,dy) ->
-	totalWidth = 0
-	totalWidth += w for w in ws
+svgtext = (text,x,y,ta='middle',ts=2) -> "<text font-size=\"#{round3 ts}em\" text-anchor=\"#{ta}\" x=\"#{x}\" y=\"#{y}\">#{text}</text>"
+svgdefs = (id,body) -> crlf + "<defs>" + crlf + "<g id=\"#{id}\" >" + crlf + body + "</g>"+ crlf + "</defs>" + crlf
+svguse  = (x,y,skalax,skalay) -> "<use href=\"#berger\" x=\"#{x}\" y=\"#{y}\" transform=\"scale(#{skalax} #{skalay})\" />" + crlf
+
+svggrid = (headers,ws,digits,n,dx,dy,totalWidth) ->
 	headers = headers.split ' '
 	res = []
 	x0 = 0
@@ -69,7 +73,7 @@ svggrid = (headers,ws,digits,n,dx,dy) ->
 	res.push svgtext 'Berger - Round Robin',0,dy*(n+1.4),'start',small
 	res.push svgtext 'Observera att placeringarna utgörs av BORDSNUMMER',totalWidth/2,dy*(n+1.4),'middle',small
 	res.push svgtext 'Courtesy of Wasa SK',totalWidth,dy*(n+1.4),'end',small
-	res.join "\n"
+	res.join crlf
 
 bergerSVG = (w,h) ->
 	tables = []
@@ -89,16 +93,32 @@ bergerSVG = (w,h) ->
 	res = 'Nr Namn'
 	dx = 1000/globals.N
 	if dx>50 then dx=50
-	dy = 0.8 * dx #800/globals.N
+	dy = 0.75 * dx
 	ws = [dx,200]
 	for i in range globals.N-1
 		res += " #{i+1}"
 		ws.push dx
 	res += ' Poäng Plats'
 	ws.push dx+dx
-	ws.push dx+dx
-	res = svggrid res,ws,tables,globals.N,dx,dy
-	"<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='#{1600}' height='#{1200}' >" + res + '</svg>'
+	ws.push dx+dx 
+	totalWidth = 0
+	totalWidth += w for w in ws
+	totalHeight = dy * (globals.N + 2)
+
+	a = svggrid res,ws,tables,globals.N,dx,dy,totalWidth
+	b = svgdefs "berger", a
+	c = b
+	totalWidth *= 1.03
+
+	[nx,ny,skalax,skalay] = [1,1,1,1.2]
+	if globals.N ==  4 then [nx,ny,skalax,skalay] = [2,4,0.84,0.84] 
+	if globals.N ==  6 then [nx,ny,skalax,skalay] = [2,3,1.00,1.10]
+	if globals.N ==  8 then [nx,ny,skalax,skalay] = [2,3,1.00,1]
+	if globals.N == 10 then [nx,ny,skalax,skalay] = [1,2,0.84,0.84]
+	for i in range nx
+		for j in range ny
+			c += svguse i*totalWidth, j*totalHeight, skalax, skalay
+	"<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='#{nx*totalWidth*skalax}' height='#{ny*totalHeight*skalay}' >" + c + '</svg>'
 
 getLocalCoords = ->
 	matrix = drawingContext.getTransform()
@@ -153,7 +173,7 @@ common.D  = new CRounded x+3*dx, 3, w, 5, "Rotation",         => setState 'SD'
 common.E  = new CRounded x+4*dx, 3, w, 5, "Berger\nSpelare",  => setState 'SE'
 common.F  = new CRounded x+5*dx, 3, w, 5, 'Berger\nHalvbord', => setState 'SF'
 common.G  = new CRounded x+6*dx, 3, w, 5, 'Berger\nBord',     => setState 'SG'
-common.H  = new CRounded x+7*dx, 3, w, 5, 'Berger\nDownload', =>
+common.H  = new CRounded x+7*dx, 3, w, 5, 'Download', =>
 	data = bergerSVG width,height
 	fileName = "#{globals.N}.svg"
 	saveData() data, fileName
