@@ -4,7 +4,7 @@
 
 [Round Robin Tournament](https://en.wikipedia.org/wiki/Round-robin_tournament)
 
-Den variant av Berger system som vanligen används är inte optimal.
+Den variant av Berger system som vanligen används är inte optimal. T ex är det inte självklart var man ska sitta och vem man ska möta efter pågående rond. Någon brukar läsa upp vem som ska möta vem.
 
 Vanlig Berger
 

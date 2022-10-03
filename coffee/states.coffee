@@ -33,9 +33,10 @@ crlf = "\n"
 round3 = (x) -> Math.round(1000*x)/1000
 
 svgline = (x1,y1,x2,y2) -> "<line x1=\"#{x1}\" y1=\"#{y1}\" x2=\"#{x2}\" y2=\"#{y2}\" stroke=\"black\"/>"
+svgrect = (x,y,width,height) -> "<rect x=\"#{x}\" y=\"#{y}\" width=\"#{width}\" height=\"#{height}\" stroke=\"black\" fill-opacity=\"0.1\" />"
 svgtext = (text,x,y,ta='middle',ts=2) -> "<text font-size=\"#{round3 ts}em\" text-anchor=\"#{ta}\" x=\"#{x}\" y=\"#{y}\">#{text}</text>"
 svgdefs = (id,body) -> crlf + "<defs>" + crlf + "<g id=\"#{id}\" >" + crlf + body + "</g>"+ crlf + "</defs>" + crlf
-svguse  = (x,y,skalax,skalay) -> "<use href=\"#berger\" x=\"#{x}\" y=\"#{y}\" transform=\"scale(#{skalax} #{skalay})\" />" + crlf
+svguse  = (id,x,y,skalax,skalay) -> "<use href=\"##{id}\" x=\"#{x}\" y=\"#{y}\" transform=\"scale(#{skalax} #{skalay})\" />" + crlf
 
 svggrid = (headers,ws,digits,n,dx,dy,totalWidth) ->
 	headers = headers.split ' '
@@ -79,7 +80,6 @@ bergerSVG = (w,h) ->
 	tables = []
 	antalSpelare = globals.ronder[0].length # antal spelare, alltid jämnt
 	antalRonder = antalSpelare - 1
-	console.log antalSpelare, antalRonder
 	for i in range antalRonder
 		spelare = invert globals.ronder[i]
 		for j in range antalSpelare
@@ -108,17 +108,25 @@ bergerSVG = (w,h) ->
 	a = svggrid res,ws,tables,globals.N,dx,dy,totalWidth
 	b = svgdefs "berger", a
 	c = b
-	totalWidth *= 1.03
 
-	[nx,ny,skalax,skalay] = [1,1,1,1.2]
-	if globals.N ==  4 then [nx,ny,skalax,skalay] = [2,4,0.84,0.84] 
-	if globals.N ==  6 then [nx,ny,skalax,skalay] = [2,3,1.00,1.10]
-	if globals.N ==  8 then [nx,ny,skalax,skalay] = [2,3,1.00,1]
-	if globals.N == 10 then [nx,ny,skalax,skalay] = [1,2,0.84,0.84]
+	totalWidth += dx
+
+	[nx,ny] = [1,1]
+	if globals.N ==  4 then [nx,ny] = [2,4]
+	if globals.N ==  6 then [nx,ny] = [2,3]
+	if globals.N ==  8 then [nx,ny] = [2,3]
+	if globals.N == 10 then [nx,ny] = [2,2]
+	if globals.N == 12 then [nx,ny] = [2,2]
+
+	#c += svgrect 0,0,1625,1140
+
+	skalax = 1625/nx / totalWidth
+	skalay = 1140/ny / totalHeight
+
 	for i in range nx
 		for j in range ny
-			c += svguse i*totalWidth, j*totalHeight, skalax, skalay
-	"<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='#{nx*totalWidth*skalax}' height='#{ny*totalHeight*skalay}' >" + c + '</svg>'
+			c += svguse "berger", i*totalWidth, j*totalHeight, skalax, skalay
+	"<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='#{1630}' height='#{1140}' >" + c + '</svg>'
 
 getLocalCoords = ->
 	matrix = drawingContext.getTransform()
