@@ -1,6 +1,6 @@
 import {globals,invert} from './globals.js'
 
-export ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' # spelare
+#export ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' # spelare
 # halvborden heter 1..52. Jämn är vit, udda är svart
 
 export grid = (xoff,dx,nx, yoff,dy,ny) ->

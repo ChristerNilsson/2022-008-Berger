@@ -1,5 +1,5 @@
 import {globals,invert} from './globals.js'
-import {ALPHABET, State, grid} from './states.js'
+import {State, grid} from './states.js'
 
 export class SF extends State # Berger Spelare
 
@@ -23,7 +23,7 @@ export class SF extends State # Berger Spelare
 		textAlign CENTER
 		text "#{@N}",@dx/2,@yoff-@dy/2
 		for i in range @N
-			text ALPHABET[i],@dx/2,@yoff+@dy/2+@dy*i
+			text i+1,@dx/2,@yoff+@dy/2+@dy*i
 		for rond in range @N-1
 			players = invert globals.ronder[rond]
 			fill 'black'
