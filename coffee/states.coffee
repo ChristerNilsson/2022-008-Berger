@@ -1,5 +1,4 @@
 import {globals,invert} from './globals.js'
-import {CRounded,CDead} from './controls.js'
 
 export ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' # spelare
 # halvborden heter 1..52. Jämn är vit, udda är svart
@@ -8,15 +7,7 @@ export grid = (xoff,dx,nx, yoff,dy,ny) ->
 	line xoff,      yoff+dy*i, xoff+nx*dx, yoff+dy*i  for i in range ny+1
 	line xoff+dx*i, yoff,      xoff+dx*i,  yoff+ny*dy for i in range nx+1
 
-export markeraRond = (rond,xoff,dx,yoff,dy,N) ->
-	push()
-	fill 'lightgray'
-	noStroke()
-	rectMode CORNER
-	rect xoff+dx*rond,yoff,dx,N*dy
-	pop()
-
-saveData = ->
+export saveData = ->
 	a = document.createElement "a"
 	#document.body.appendChild a # Skapar många downloads
 	a.style = "display: none"
@@ -75,7 +66,7 @@ svggrid = (headers,ws,digits,n,dx,dy,totalWidth) ->
 	res.push svgtext 'Courtesy of Wasa SK',totalWidth,dy*(n+1.4),'end',small
 	res.join crlf
 
-bergerSVG = (w,h) ->
+export bergerSVG = (w,h) ->
 	tables = []
 	antalSpelare = globals.ronder[0].length # antal spelare, alltid jämnt
 	antalRonder = antalSpelare - 1
@@ -132,74 +123,27 @@ getLocalCoords = ->
 	pd = pixelDensity()
 	matrix.inverse().transformPoint new DOMPoint mouseX * pd,mouseY * pd
 
-export setState = (key) ->
-	globals.currState = globals.states[key]
-	common.A.disabled = key == 'SA'
-	common.B.disabled = key == 'SB'
-	common.C.disabled = key == 'SC'
-	common.D.disabled = key == 'SD'
-	common.E.disabled = key == 'SE'
-	common.F.disabled = key == 'SF'
-	common.G.disabled = key == 'SG'
-	#common.H.disabled = key == 'SH'
-
-export setRond = (delta) ->
-	globals.rond += delta
-	common.R0.visible = globals.rond > 0
-	common.R2.visible = globals.rond < globals.N-2
-	common.R1.text = "Rond:\n#{globals.rond + 1}"
+export setState = (key) -> globals.currState = globals.states[key]
 
 export setN = (delta) ->
-	globals.N += delta
-	globals.rond = 0
-	setRond 0
-	common.X0.visible = globals.N > 4
-	common.X2.visible = globals.N < ALPHABET.length
-	common.X1.text = "Spelare:\n#{globals.N}"
+	if 4 <= globals.N + delta <= 52
+		globals.N += delta
+		globals.rond = 0
 
-	N = globals.N
-	globals.ronder = []
-	for rond in range N-1
-		players = range N-1
-		players = players.slice(N-1-rond).concat players.slice(0,N-1-rond)
-		players.push N-1
-		if rond%2==1 then [players[0],players[N-1]] = [players[N-1],players[0]]
-		globals.ronder.push players
-	for key of globals.states
-		state = globals.states[key]
-		state.setN()
-
-common = {}
-x = 6.25
-dx = 100/8
-w = 100/8.5
-common.A  = new CRounded x+0*dx, 3, w, 5, 'Halvbord',         => setState 'SA'
-common.B  = new CRounded x+1*dx, 3, w, 5, 'Bord',             => setState 'SB'
-common.C  = new CRounded x+2*dx, 3, w, 5, "Cirkel",           => setState 'SC'
-common.D  = new CRounded x+3*dx, 3, w, 5, "Rotation",         => setState 'SD'
-common.E  = new CRounded x+4*dx, 3, w, 5, "Berger\nSpelare",  => setState 'SE'
-common.F  = new CRounded x+5*dx, 3, w, 5, 'Berger\nHalvbord', => setState 'SF'
-common.G  = new CRounded x+6*dx, 3, w, 5, 'Berger\nBord',     => setState 'SG'
-common.H  = new CRounded x+7*dx, 3, w, 5, 'Download', =>
-	data = bergerSVG width,height
-	fileName = "#{globals.N}.svg"
-	saveData() data, fileName
-
-common.X0 = new CRounded  9-0.5, 97, 15, 5, '-2', => setN -2
-common.X1 = new CRounded 25-0.5, 97, 15, 5, 4
-common.X2 = new CRounded 41-0.5, 97, 15, 5, '+2', => setN +2
-common.X1.disabled = true
-
-common.R0 = new CRounded 59+0.5, 97, 15, 5, '-1', => setRond -1
-common.R1 = new CRounded 75+0.5, 97, 15, 5, 0
-common.R2 = new CRounded 91+0.5, 97, 15, 5, '+1', => setRond +1
-common.R1.disabled = true
+		N = globals.N
+		globals.ronder = []
+		for rond in range N-1
+			players = range N-1
+			players = players.slice(N-1-rond).concat players.slice(0,N-1-rond)
+			players.push N-1
+			if rond%2==1 then [players[0],players[N-1]] = [players[N-1],players[0]]
+			globals.ronder.push players
+		for key of globals.states
+			state = globals.states[key]
+			state.setN()
 
 export class State
-	constructor : (@name) ->
-		@controls = common
-		@setN()
-
+	constructor : (@name) -> @setN()
 	drawControls : -> @controls[key].draw() for key of @controls
 
 	mouseClicked : ->

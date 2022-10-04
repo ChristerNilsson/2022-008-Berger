@@ -41,3 +41,7 @@ Round Robin
 * Sista spelaren sitter alltid vid bord 1 och byter färg varje rond.
 * Övriga spelare får spela utan färgbyte exakt en gång.
 * SVG-filer kan laddas ner och skrivas ut.
+* Klicka någonstans för att få upp menyn
+	* '-2' innebär att antal spelare minskas med 2
+	* '+2' innebär att antal spelare ökas med 2
+	* 'Download' innebär att en .SVG-fil skapas. Denna kan skrivas ut.

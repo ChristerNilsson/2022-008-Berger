@@ -1,13 +1,9 @@
+import {Dialogue, showDialogue, dialogues} from './dialogue.js'
 import {globals} from './globals.js'
-import {setState, setN, setRond} from './states.js'
-import {SA} from './SA.js'
-import {SB} from './SB.js'
-import {SC} from './SC.js'
-import {SD} from './SD.js'
-import {SE} from './SE.js'
-import {SF} from './SF.js'
+import {setState, setN,bergerSVG,saveData} from './states.js'
 import {SG} from './SG.js'
-import {SH} from './SH.js'
+
+Array.prototype.clear = -> @length = 0
 
 createState = (key,klass) -> globals.states[key] = new klass key
 
@@ -21,24 +17,34 @@ window.setup = ->
 	rectMode CENTER
 	angleMode DEGREES
 	
-	createState 'SA', SA
-	createState 'SB', SB
-	createState 'SC', SC
-	createState 'SD', SD
-	createState 'SE', SE
-	createState 'SF', SF
 	createState 'SG', SG
-	createState 'SH', SH
-
 	setState 'SG'
 	setN 0
-	setRond 0
 
-window.mouseClicked = -> globals.currState.mouseClicked()
+window.mouseClicked = ->
+	if dialogues.length == 0
+		menu1()
+	else
+		dialogue = _.last dialogues
+		dialogue.execute mouseX,mouseY
 
 window.draw = ->
+	push()
 	scale width/100,height/100 # portrait
 	strokeWeight 100/height
 	background 'gray'
 	globals.currState.drawControls()
 	globals.currState.draw()
+	pop()
+	showDialogue()
+
+menu1 = -> # Main Menu
+	dialogue = new Dialogue()
+	dialogue.add '-2', -> setN -2
+	dialogue.add '+2', -> setN 2
+	dialogue.add 'Download', ->
+		data = bergerSVG width,height
+		fileName = "#{globals.N}.svg"
+		saveData() data, fileName
+		dialogues.clear()
+	dialogue.clock ' ',true,-60

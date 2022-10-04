@@ -1,5 +1,5 @@
 import {globals,invert} from './globals.js'
-import {ALPHABET, State, grid, markeraRond} from './states.js'
+import {ALPHABET, State, grid} from './states.js'
 
 export class SF extends State # Berger Spelare
 
@@ -11,24 +11,24 @@ export class SF extends State # Berger Spelare
 		@N = globals.N
 		@dx = 99/@N
 		if @dx > 10 then @dx=10
-		@dy = (100-12)/(@N+1)
+		@dy = 99/(@N+1)
 		if @dy > 10 then @dy=10
 		@xoff = @dx
-		@yoff = 6+@dy
+		@yoff = @dy
 
 	draw: ->
 		#super()
 
 		textSize @dy/2
+		textAlign CENTER
+		text "#{@N}",@dx/2,@yoff-@dy/2
 		for i in range @N
-			fill if i==0 then 'red' else 'black'
 			text ALPHABET[i],@dx/2,@yoff+@dy/2+@dy*i
 		for rond in range @N-1
 			players = invert globals.ronder[rond]
 			fill 'black'
 			text rond+1,@dx*1.5+@dx*rond,@yoff-@dy/2
 
-			if rond == globals.rond then markeraRond rond,@xoff,@dx,@yoff,@dy,@N
 			for iPlace in range @N
 				iPlayer = players[iPlace]
 				p = iPlayer
