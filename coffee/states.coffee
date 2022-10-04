@@ -1,6 +1,5 @@
 import {globals,invert} from './globals.js'
 import {CRounded,CDead} from './controls.js'
-# import saveAs from './file-saver.js'
 
 export ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' # spelare
 # halvborden heter 1..52. Jämn är vit, udda är svart
@@ -186,13 +185,11 @@ common.H  = new CRounded x+7*dx, 3, w, 5, 'Download', =>
 	fileName = "#{globals.N}.svg"
 	saveData() data, fileName
 
-#common.XSpelare = new CDead 25, 93.5,'Spelare:'
 common.X0 = new CRounded  9-0.5, 97, 15, 5, '-2', => setN -2
 common.X1 = new CRounded 25-0.5, 97, 15, 5, 4
 common.X2 = new CRounded 41-0.5, 97, 15, 5, '+2', => setN +2
 common.X1.disabled = true
 
-#common.XRond = new CDead 75, 93.5,'Rond:'
 common.R0 = new CRounded 59+0.5, 97, 15, 5, '-1', => setRond -1
 common.R1 = new CRounded 75+0.5, 97, 15, 5, 0
 common.R2 = new CRounded 91+0.5, 97, 15, 5, '+1', => setRond +1
