@@ -22,5 +22,4 @@ globals.states = {}
 globals.currState = null
 globals.TOGGLE = 0
 globals.N = 10 # 4..52 number of players. Even number!
-#globals.rond = 0 # nollbaserad
-globals.ronder = [] # för varje rond, gå in med halvbord och få ut spelaren
+globals.ronder = []

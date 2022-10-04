@@ -17,11 +17,7 @@ export class SF extends State # Berger Spelare
 		@yoff = @dy
 
 	draw: ->
-		#super()
-
 		textSize @dy/2
-		textAlign CENTER
-		text "#{@N}",@dx/2,@yoff-@dy/2
 		for i in range @N
 			text i+1,@dx/2,@yoff+@dy/2+@dy*i
 		for rond in range @N-1
@@ -41,4 +37,3 @@ export class SF extends State # Berger Spelare
 				text p+1,x,y
 			textAlign CENTER
 		grid @xoff,@dx, @N-1, @yoff, @dy, @N
-
